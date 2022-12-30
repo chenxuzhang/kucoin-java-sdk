@@ -73,6 +73,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.6</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -87,4 +93,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Releases Repository</name>
+            <url>http://10.88.11.197:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Snapshot Repository</name>
+            <url>http://10.88.11.197:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
