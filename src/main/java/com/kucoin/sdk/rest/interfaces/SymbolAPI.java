@@ -24,6 +24,13 @@ public interface SymbolAPI {
     List<SymbolResponse> getSymbols() throws IOException;
 
     /**
+     * Get a list of available currency pairs for trading.
+     *
+     * @return The available symbols.
+     */
+    List<SymbolResponse> getSymbols(String market) throws IOException;
+
+    /**
      * Ticker include only the inside (i.e. best) bid and ask data , last price and last trade size.
      *
      * @param symbol

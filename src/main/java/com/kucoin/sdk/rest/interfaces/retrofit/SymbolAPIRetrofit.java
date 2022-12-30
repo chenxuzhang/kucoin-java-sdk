@@ -19,8 +19,12 @@ import java.util.List;
  */
 public interface SymbolAPIRetrofit {
 
+    @Deprecated
     @GET("api/v1/symbols")
     Call<KucoinResponse<List<SymbolResponse>>> getSymbols();
+
+    @GET("api/v2/symbols")
+    Call<KucoinResponse<List<SymbolResponse>>> getSymbols(@Query("market") String market);
 
     @GET("api/v1/market/orderbook/level1")
     Call<KucoinResponse<TickerResponse>> getTicker(@Query("symbol") String symbol);

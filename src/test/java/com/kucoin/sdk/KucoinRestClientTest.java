@@ -43,8 +43,8 @@ public class KucoinRestClientTest {
 
     @BeforeClass
     public static void setUpClass() {
-        sandboxKucoinRestClient = new KucoinClientBuilder().withBaseUrl("https://openapi-sandbox.kucoin.com")
-                .withApiKey("5f927beac1cfb50006afcd3c", "943aede3-1dd2-46fe-9654-7df9f275e118", "12121212")
+        sandboxKucoinRestClient = new KucoinClientBuilder().withBaseUrl("https://openapi-v2.kucoin.com")
+                .withApiKey("6392f98ccc568b000128f309", "ed16b6fd-a272-44de-8348-2eff834cae21", "20221209")
                 .buildRestClient();
         liveKucoinRestClient = new KucoinClientBuilder().withBaseUrl("https://openapi-v2.kucoin.com")
                 .buildRestClient();
@@ -202,6 +202,9 @@ public class KucoinRestClientTest {
         assertThat(sandboxKucoinRestClient.symbolAPI().getTicker("ETH-BTC"), notNullValue());
 
         List<SymbolResponse> symbols = sandboxKucoinRestClient.symbolAPI().getSymbols();
+        List<SymbolResponse> symbols1 = sandboxKucoinRestClient.symbolAPI().getSymbols("SC");
+        List<SymbolResponse> symbols2 = sandboxKucoinRestClient.symbolAPI().getSymbols("");
+
         assertThat(symbols, notNullValue());
         assertThat(symbols.size(), greaterThan(0));
 
