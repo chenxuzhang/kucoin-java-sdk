@@ -30,6 +30,7 @@ public interface AccountAPIRetrofit {
     @GET("api/v1/accounts/{accountId}")
     Call<KucoinResponse<AccountBalanceResponse>> getAccount(@Path("accountId") String accountId);
 
+    @Deprecated
     @POST("api/v1/accounts")
     Call<KucoinResponse<Map<String, String>>> addAccount(@Body AccountCreateRequest request);
 
