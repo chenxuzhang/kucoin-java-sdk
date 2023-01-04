@@ -99,4 +99,18 @@ public class KucoinPrivateWSClientImpl extends BaseWebsocketImpl implements Kuco
         return super.unsubscribe(channelEnum.getTopicPrefix() + Arrays.stream(symbols).collect(Collectors.joining(",")),
                 true, true);
     }
+
+    @Override
+    public void pongCallback(KucoinAPICallback<KucoinEvent> callback) {
+        if (callback != null) {
+            this.listener.setPongCallback(callback);
+        }
+    }
+
+    @Override
+    public void connectSuccessCallback(KucoinAPICallback<KucoinEvent> callback) {
+        if (callback != null) {
+            this.listener.setConnectSuccessCallback(callback);
+        }
+    }
 }

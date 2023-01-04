@@ -115,5 +115,15 @@ public interface KucoinPublicWSClient {
      */
     String onSnapshot(KucoinAPICallback<KucoinEvent<SnapshotEvent>> callback, String target);
 
+    /**
+     * 心跳回复callback
+     * @param callback
+     */
+    void pongCallback(KucoinAPICallback<KucoinEvent> callback);
 
+    /**
+     * 链接成功callback
+     * @param callback
+     */
+    void connectSuccessCallback(KucoinAPICallback<KucoinEvent> callback);
 }

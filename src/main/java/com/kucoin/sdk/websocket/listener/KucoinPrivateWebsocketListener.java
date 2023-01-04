@@ -34,6 +34,8 @@ public class KucoinPrivateWebsocketListener extends WebSocketListener {
     private KucoinAPICallback<KucoinEvent<AccountChangeEvent>> accountChangeCallback = new PrintCallback<>();
     private KucoinAPICallback<KucoinEvent<OrderChangeEvent>> orderChangeCallback = new PrintCallback<>();
     private KucoinAPICallback<KucoinEvent<? extends AdvancedOrderEvent>> advancedOrderCallback = new PrintCallback<>();
+    private KucoinAPICallback<KucoinEvent> pongCallback = new PrintCallback<>();
+    private KucoinAPICallback<KucoinEvent> connectSuccessCallback = new PrintCallback<>();
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
@@ -47,7 +49,15 @@ public class KucoinPrivateWebsocketListener extends WebSocketListener {
         LOGGER.debug("Parsed message: {}", text);
 
         String type = jsonObject.get("type").asText();
-        if (!type.equals("message")) {
+        if (APIConstants.API_WELCOME_TYPE.equals(type)) {
+            connectSuccessCallback.onResponse(deserialize(text, new TypeReference<KucoinEvent>() {
+            }));
+            return;
+        } else if (APIConstants.API_PONG_TYPE.equals(type)) {
+            pongCallback.onResponse(deserialize(text, new TypeReference<KucoinEvent>() {
+            }));
+            return;
+        } else if (!type.equals("message")) {
             LOGGER.debug("Ignoring message type ({})", type);
             return;
         }
@@ -76,6 +86,16 @@ public class KucoinPrivateWebsocketListener extends WebSocketListener {
                 advancedOrderCallback.onResponse(kucoinEvent);
             }
         }
+    }
+
+    @Override
+    public void onClosing(WebSocket webSocket, int code, String reason) {
+        LOGGER.error("Closing on private socket code:{},reason:{}", code, reason);
+    }
+
+    @Override
+    public void onClosed(WebSocket webSocket, int code, String reason) {
+        LOGGER.error("Closed on private socket code:{},reason:{}", code, reason);
     }
 
     @Override

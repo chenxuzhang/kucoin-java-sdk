@@ -73,4 +73,17 @@ public interface KucoinPrivateWSClient {
      * Close client
      */
     void close() throws IOException;
+
+    /**
+     * 心跳回复callback
+     * @param callback
+     */
+    void pongCallback(KucoinAPICallback<KucoinEvent> callback);
+
+    /**
+     * 链接成功callback
+     * @param callback
+     */
+    void connectSuccessCallback(KucoinAPICallback<KucoinEvent> callback);
+
 }

@@ -6,6 +6,7 @@ package com.kucoin.sdk.websocket.listener;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kucoin.sdk.KucoinObjectMapper;
+import com.kucoin.sdk.constants.APIConstants;
 import com.kucoin.sdk.websocket.KucoinAPICallback;
 import com.kucoin.sdk.websocket.PrintCallback;
 import com.kucoin.sdk.websocket.event.*;
@@ -38,6 +39,8 @@ public class KucoinPublicWebsocketListener extends WebSocketListener {
     private KucoinAPICallback<KucoinEvent<Level3ChangeEvent>> level3Callback = new PrintCallback<>();
     private KucoinAPICallback<KucoinEvent<Level3Event>> level3V2Callback = new PrintCallback<>();
     private KucoinAPICallback<KucoinEvent<SnapshotEvent>> snapshotCallback = new PrintCallback<>();
+    private KucoinAPICallback<KucoinEvent> pongCallback = new PrintCallback<>();
+    private KucoinAPICallback<KucoinEvent> connectSuccessCallback = new PrintCallback<>();
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
@@ -51,7 +54,13 @@ public class KucoinPublicWebsocketListener extends WebSocketListener {
         LOGGER.debug("Parsed message OK");
 
         String type = jsonObject.get("type").asText();
-        if (!type.equals("message")) {
+        if (APIConstants.API_WELCOME_TYPE.equals(type)) {
+            connectSuccessCallback.onResponse(deserialize(text, new TypeReference<KucoinEvent>() {
+            }));
+        } else if (APIConstants.API_PONG_TYPE.equals(type)) {
+            pongCallback.onResponse(deserialize(text, new TypeReference<KucoinEvent>() {
+            }));
+        } else if (!type.equals("message")) {
             LOGGER.debug("Ignoring message type ({})", type);
             return;
         }
@@ -93,8 +102,18 @@ public class KucoinPublicWebsocketListener extends WebSocketListener {
     }
 
     @Override
+    public void onClosing(WebSocket webSocket, int code, String reason) {
+        LOGGER.error("Closing on public socket code:{},reason:{}", code, reason);
+    }
+
+    @Override
+    public void onClosed(WebSocket webSocket, int code, String reason) {
+        LOGGER.error("Closed on public socket code:{},reason:{}", code, reason);
+    }
+
+    @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-        LOGGER.error("Error on private socket", t);
+        LOGGER.error("Error on public socket", t);
     }
 
     private JsonNode tree(String text) {

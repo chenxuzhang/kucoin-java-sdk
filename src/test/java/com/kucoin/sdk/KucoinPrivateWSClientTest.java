@@ -46,18 +46,18 @@ public class KucoinPrivateWSClientTest {
     private static KucoinRestClient kucoinRestClient;
     private static KucoinPrivateWSClient kucoinPrivateWSClient;
 
-    @BeforeClass
+    /*@BeforeClass
     public static void setupClass() throws Exception {
-        KucoinClientBuilder builder = new KucoinClientBuilder().withBaseUrl("https://openapi-sandbox.kucoin.com")
-                .withApiKey("5f927beac1cfb50006afcd3c", "943aede3-1dd2-46fe-9654-7df9f275e118", "12121212");
+        KucoinClientBuilder builder = new KucoinClientBuilder().withBaseUrl("https://openapi-v2.kucoin.com")
+                .withApiKey("6392f98ccc568b000128f309", "ed16b6fd-a272-44de-8348-2eff834cae21", "20221209");
         kucoinRestClient = builder.buildRestClient();
         kucoinPrivateWSClient = builder.buildPrivateWSClient();
-    }
+    }*/
 
-    @AfterClass
+    /*@AfterClass
     public static void afterClass() throws Exception {
         kucoinPrivateWSClient.close();
-    }
+    }*/
 
     @Test
     public void onOrderActivate() throws Exception {
@@ -148,9 +148,16 @@ public class KucoinPrivateWSClientTest {
 
     @Test
     public void ping() throws Exception {
-        String requestId = "1234567890";
-        String ping = kucoinPrivateWSClient.ping(requestId);
-        assertThat(ping, Is.is(requestId));
+        KucoinClientBuilder kucoinClientBuilder = new KucoinClientBuilder().withBaseUrl("https://openapi-v2.kucoin.com")
+                .withApiKey("6392f98ccc568b000128f309", "ed16b6fd-a272-44de-8348-2eff834cae21", "20221209");
+        KucoinPrivateWSClient kucoinPrivateWSClient = kucoinClientBuilder.buildPrivateWSClient();
+        while (true) {
+            String requestId = System.currentTimeMillis() + "";
+            String ping = kucoinPrivateWSClient.ping(requestId);
+            System.out.println(ping);
+            assertThat(ping, Is.is(requestId));
+            Thread.sleep(3000);
+        }
     }
 
     @Test
